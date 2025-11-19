@@ -1,6 +1,6 @@
 MCU=atmega4809
 CC=avr-gcc
-CFLAGS=-mmcu=$(MCU) -Os -DF_CPU=16000000UL
+CFLAGS=-mmcu=$(MCU) -Os -DF_CPU=16000000UL -mmcu=$(MCU) 
 OBJCOPY=avr-objcopy
 AVRDUDE=avrdude
 
