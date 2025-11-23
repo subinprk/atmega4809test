@@ -1,13 +1,13 @@
 MCU=atmega4809
 CC=avr-gcc
-CFLAGS=-mmcu=$(MCU) -Os -DF_CPU=16000000UL -DBAUD_RATE=9600
+CFLAGS=-mmcu=$(MCU) -Os -DF_CPU=20000000UL -DBAUD_RATE=9600
 OBJCOPY=avr-objcopy
 AVRDUDE=avrdude
 
 PROGRAMMER=jtag2updi
 PORT=COM4    # ← UNO가 잡힌 포트로 맞춰줘!
 
-SRC=src/main.c src/uart.c
+SRC=src/main.c src/uart.c src/mlxInput.c src/mlxtwi.c
 OBJ=$(SRC:.c=.o)
 
 all: main.hex

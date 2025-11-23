@@ -1,4 +1,6 @@
-#define F_CPU 16000000UL 
+#define UART_F_CPU 16000000UL
+//oddly peripheral clock is 16MHz even though main clock is 20MHz
+
 #define BAUD_RATE 9600
 
 #include <avr/io.h>
@@ -13,7 +15,9 @@ void USART1_init(void)
     PORTC.DIRSET = PIN0_bm;
     PORTC.DIRCLR = PIN1_bm;
 
-    USART1.BAUD = (F_CPU * 64 / (16 * (float)BAUD_RATE)) + 0.5;
+    // BAUD calculation for 16 MHz at 9600 baud
+    // Formula: BAUD = (UART_F_CPU * 64) / (16 * BAUD_RATE)
+    USART1.BAUD = (uint16_t)((UART_F_CPU * 64UL) / (16UL * BAUD_RATE));
 
     USART1.CTRLC = USART_CHSIZE_8BIT_gc;
     USART1.CTRLB = USART_TXEN_bm | USART_RXEN_bm;
