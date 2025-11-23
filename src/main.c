@@ -33,6 +33,9 @@ int main(void)
             char c = USART1_readChar();
             USART1_sendChar(c);
         }
+        //USART1_sendString("Hello, UART!\r\n");
+        
+        
 
         _delay_ms(500);
     }
