@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "uart.h"
+#include "mlx90640.h"
 
 int main(void)
 {
@@ -16,27 +17,44 @@ int main(void)
     PORTA.DIRSET = PIN7_bm;
     
     USART1_init();
+    TWI0_init();
+
+    USART1_sendString("MLX90640 TEST START\r\n");
+    TWI0_debug_status();
+    TWI0_scan();  // 한 번만 스캔
+    
+    _delay_ms(100);  // 스캔 후 안정화
+
 
     while (1)
     {
         // Blink LED
         PORTA.OUTTGL = PIN7_bm;
         
-        // Send single character (simpler than string)
-        // USART1_sendChar('H');
-        // USART1_sendChar('\r');
-        // USART1_sendChar('\n');
-        
+        //========UART Echo Test========//
         // Echo received characters
-        if (USART1.STATUS & USART_RXCIF_bm)
-        {
-            char c = USART1_readChar();
-            USART1_sendChar(c);
-        }
-        //USART1_sendString("Hello, UART!\r\n");
-        
+        // if (USART1.STATUS & USART_RXCIF_bm)
+        // {
+        //     char c = USART1_readChar();
+        //     USART1_sendChar(c);
+        // }
         
 
-        _delay_ms(500);
+        //========MLX90640 Read Test========//
+        TWI0_reset_bus();  // 읽기 전 버스 리셋
+        
+        USART1_sendString("Device ID: ");
+        debug_MLX_read16(0x2407);  // Device ID
+        
+        USART1_sendString("Status Reg: ");
+        debug_MLX_read16(0x240D);  // Status (0x0000 정상)
+        
+        USART1_sendString("RAM pixel[0]: ");
+        debug_MLX_read16(0x0400);  // RAM 첫 픽셀
+        
+        USART1_sendString("RAM pixel[100]: ");
+        debug_MLX_read16(0x0464);  // RAM 중간 픽셀
+        
+        _delay_ms(2000);  // 2초마다 읽기
     }
 }

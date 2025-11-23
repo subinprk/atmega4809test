@@ -6,11 +6,14 @@
 
 //======== TWI (I2C) function prototypes ========
 void TWI0_init(void);
+void TWI0_reset_bus(void);
 uint8_t TWI0_start(uint8_t address);
 void TWI0_stop(void);
 uint8_t TWI0_write(uint8_t data);
 uint8_t TWI0_read_ack(void);
 uint8_t TWI0_read_nack(void);
+void TWI0_debug_status(void);
+void TWI0_scan(void);
 
 //======== MLX90640 function prototypes ========
 uint16_t MLX_read16(uint16_t reg);
