@@ -19,4 +19,8 @@ void TWI0_scan(void);
 uint16_t MLX_read16(uint16_t reg);
 void debug_MLX_read16(uint16_t reg);
 
+//======== MPU6050 function prototypes ========
+uint8_t MPU6050_read8(uint8_t reg);
+void debug_MPU6050_read8(uint8_t reg, const char *label);
+
 #endif // MLX90640_H

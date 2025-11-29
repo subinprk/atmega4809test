@@ -2,6 +2,7 @@
 #include <util/delay.h>
 #include "uart.h"
 #include "mlx90640.h"
+#include "mpu6050.h"
 
 int main(void)
 {
@@ -23,6 +24,10 @@ int main(void)
     TWI0_debug_status();
     TWI0_scan();  // 한 번만 스캔
     
+    // MPU6050 초기화 및 테스트
+    MPU6050_init();
+    MPU6050_debug_test();
+    
     _delay_ms(100);  // 스캔 후 안정화
 
 
@@ -41,20 +46,21 @@ int main(void)
         
 
         //========MLX90640 Read Test========//
-        TWI0_reset_bus();  // 읽기 전 버스 리셋
+        TWI0_reset_bus();
         
+        USART1_sendString("\r\n=== MLX90640 ===\r\n");
         USART1_sendString("Device ID: ");
-        debug_MLX_read16(0x2407);  // Device ID
-        
-        USART1_sendString("Status Reg: ");
-        debug_MLX_read16(0x240D);  // Status (0x0000 정상)
+        debug_MLX_read16(0x2407);
         
         USART1_sendString("RAM pixel[0]: ");
-        debug_MLX_read16(0x0400);  // RAM 첫 픽셀
+        debug_MLX_read16(0x0400);
         
-        USART1_sendString("RAM pixel[100]: ");
-        debug_MLX_read16(0x0464);  // RAM 중간 픽셀
+        //========MPU6050 Read Test========//
+        USART1_sendString("\r\n=== MPU6050 ===\r\n");
+        debug_MPU6050_read8(0x75, "WHO_AM_I");  // Should be 0x68
+        debug_MPU6050_read8(0x6B, "PWR_MGMT_1"); // Power management
+        debug_MPU6050_read8(0x3B, "ACCEL_X_H");  // Accelerometer X high byte
         
-        _delay_ms(2000);  // 2초마다 읽기
+        _delay_ms(2000);
     }
 }
